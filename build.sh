@@ -3,22 +3,20 @@
 set -ouex pipefail
 
 ### Install packages
+# Get the main version
+OS_VERSION=$(rpm -E %fedora)
 
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/39/x86_64/repoview/index.html&protocol=https&redirect=1
+# Install packages
+dnf5 install -y kcm-fcitx5 kgpg kmousetool kontact merkuro yakuake syncthing
 
-# this installs a package from fedora repos
-# dnf install -y tmux 
+# Install COPR packages
 
-# Use a COPR Example:
-#
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
+# Install 3rd party packages
+curl -fLs --create-dirs \
+https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo \
+-o /etc/yum.repos.d/download.opensuse.org.repositories.home:mkittler.Fedora_${OS_VERSION}.home:mkittler.repo
 
-#### Example for enabling a System Unit File
+dnf5 install -y syncthingplasmoid-qt6
 
-# systemctl enable podman.socket
+### Remove packages
+dnf5 remove -y lutris
