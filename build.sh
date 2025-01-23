@@ -6,6 +6,11 @@ echo "::group:: ===== Manage Packages ====="
 /ctx/build/packages.sh
 echo "::endgroup::"
 
+echo "::group:: ===== Run Scripts ====="
+/ctx/build/flatpak-cake-wallet.sh
+/ctx/build/flatpak-librewolf-keepassxc.sh
+echo "::endgroup::"
+
 echo "::group:: ===== Install Fonts ====="
 /ctx/build/fonts.sh
 echo "::endgroup::"
