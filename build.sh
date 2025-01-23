@@ -31,6 +31,7 @@ DEST="/usr/share/fonts/nerd-fonts"
 curl -fLs --create-dirs "${URL}/JetBrainsMono.tar.xz" -o "/tmp/fonts/${FONT}.tar.xz"
 
 # Copy fonts
+mkdir -p "${DEST}/${FONT}"
 tar -xf "/tmp/fonts/${FONT}.tar.xz" -C "${DEST}/${FONT}"
 
 # Post-install
