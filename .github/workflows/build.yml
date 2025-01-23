@@ -18,7 +18,6 @@ env:
     IMAGE_DESC: 'My Customized Universal Blue Image'
     IMAGE_VENDOR: ${{ github.repository_owner }}
     IMAGE_REGISTRY: 'ghcr.io/${{ github.repository_owner }}' # do not edit
-    ARTIFACTHUB_LOGO_URL: 'https://avatars.githubusercontent.com/u/120078124?s=200&v=4' # You should put your own image here so that you get a fancy profile image on https://artifacthub.io/!
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
@@ -48,14 +47,8 @@ jobs:
             - name: Get Current Date
               id: date
               run: |
-                  # This generates a timestamp like what is defined on the ArtifactHub documentation
-                  # E.G: 2022-02-08T15:38:15Z'
-                  # https://artifacthub.io/docs/topics/repositories/container-images/
-                  # https://linux.die.net/man/1/date
                   echo "date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" >> $GITHUB_OUTPUT
 
-            # Image metadata for https://artifacthub.io/ - This is optional but is highly recommended so we all can get a index of all the custom images
-            # The metadata by itself is not going to do anything, you choose if you want your image to be on ArtifactHub or not.
             - name: Image Metadata
               uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5
               id: metadata
@@ -69,7 +62,6 @@ jobs:
                       type=sha,enable=${{ github.event_name == 'pull_request' }}
                       type=ref,event=pr
                   labels: |
-                      io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/refs/heads/main/README.md
                       org.opencontainers.image.created=${{ steps.date.outputs.date }}
                       org.opencontainers.image.description=${{ env.IMAGE_DESC }}
                       org.opencontainers.image.documentation=https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/refs/heads/main/README.md
@@ -78,11 +70,6 @@ jobs:
                       org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
                       org.opencontainers.image.vendor=${{ github.repository_owner }}
                       org.opencontainers.image.version=latest
-                      io.artifacthub.package.deprecated=false
-                      io.artifacthub.package.keywords=bootc,ublue,universal-blue
-                      io.artifacthub.package.license=Apache-2.0
-                      io.artifacthub.package.logo-url=${{ env.ARTIFACTHUB_LOGO_URL }}
-                      io.artifacthub.package.prerelease=false
                       containers.bootc=1
                   sep-tags: ' '
                   sep-annotations: ' '
