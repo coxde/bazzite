@@ -14,6 +14,10 @@ echo "::group:: ===== Install Icons ====="
 /ctx/build/icons.sh
 echo "::endgroup::"
 
+echo "::group:: ===== Include Just Recipes ====="
+/ctx/build/just.sh
+echo "::endgroup::"
+
 echo "::group:: ===== Replace Image Info ====="
 /ctx/build/image-info.sh
 echo "::endgroup::"
