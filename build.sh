@@ -3,7 +3,7 @@
 set -ouex pipefail
 
 ### Install packages
-# Get the main version
+# Set variables
 OS_VERSION=$(rpm -E %fedora)
 
 # Install packages
@@ -20,3 +20,19 @@ dnf5 install -y syncthingplasmoid-qt6
 
 ### Remove packages
 dnf5 remove -y lutris
+
+### Install fonts
+# Set variables
+FONT=JetBrainsMono
+URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download"
+DEST="/usr/share/fonts/nerd-fonts"
+
+# Download fonts
+curl -fLs --create-dirs "${URL}/JetBrainsMono.tar.xz" -o "/tmp/fonts/${FONT}.tar.xz"
+
+# Copy fonts
+tar -xf "/tmp/fonts/${FONT}.tar.xz" -C "${DEST}/${FONT}"
+
+# Post-install
+rm -rf /tmp/fonts
+fc-cache --system-only --really-force "${DEST}"
