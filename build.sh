@@ -36,3 +36,11 @@ tar -xf "/tmp/fonts/${FONT}.tar.xz" -C "${DEST}/${FONT}"
 # Post-install
 rm -rf /tmp/fonts
 fc-cache --system-only --really-force "${DEST}"
+
+### Install icons
+# Install Papirus Icon Theme
+wget -qO- https://git.io/papirus-icon-theme-install | sh
+
+# Install Papirus Folders and 
+wget -qO- https://git.io/papirus-folders-install | sh
+papirus-folders -C nordic # Hardcode Nordic color (read-only system)
