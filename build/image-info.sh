@@ -2,6 +2,7 @@
 
 set -ouex pipefail
 
+# Set variables
 IMAGE_INFO_FILE="/usr/share/ublue-os/image-info.json"
 IMAGE_REF="ostree-image-signed:docker://ghcr.io/$IMAGE_VENDOR/$IMAGE_NAME"
 

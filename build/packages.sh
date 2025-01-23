@@ -10,6 +10,7 @@ dnf5 install -y kcm-fcitx5 kgpg kmousetool kontact merkuro yakuake syncthing
 
 # Install COPR packages
 
+
 # Install 3rd party packages
 curl -fLs --create-dirs \
 https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo \
