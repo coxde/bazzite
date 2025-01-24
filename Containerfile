@@ -6,7 +6,7 @@ COPY / /
 FROM ghcr.io/ublue-os/bazzite:stable AS base
 
 # Environments
-ARG IMAGE_NAME="${IMAGE_NAME:-u-os}"
+ARG IMAGE_NAME="${IMAGE_NAME:-bazzite}"
 ARG IMAGE_VENDOR="${IMAGE_VENDOR:-coxde}"
 
 # Build
