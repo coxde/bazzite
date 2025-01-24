@@ -13,10 +13,11 @@ on:
     workflow_dispatch:
 
 env:
-    IMAGE_NAME: '${{ github.event.repository.name }}' # the name of the image produced by this build, matches repo names
+    IMAGE_NAME: '${{ github.event.repository.name }}'
     IMAGE_DESC: 'My Customized Bazzite Image'
     IMAGE_VENDOR: ${{ github.repository_owner }}
-    IMAGE_REGISTRY: 'ghcr.io/${{ github.repository_owner }}' # do not edit
+    IMAGE_REGISTRY: 'ghcr.io/${{ github.repository_owner }}'
+    FEDORA_VERSION: '41'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
@@ -33,8 +34,8 @@ jobs:
             id-token: write
 
         outputs:
-            release_date: ${{ steps.date.outputs.date }}
-            tag_date: ${{ steps.date.outputs.tag_date }}
+            build_date: ${{ steps.date.outputs.build_date }}
+            version: ${{ steps.generate_tags.outputs.version }}
 
         steps:
             - name: Checkout
@@ -49,29 +50,54 @@ jobs:
             - name: Get Current Date
               id: date
               run: |
-                  echo "date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" >> $GITHUB_OUTPUT
+                  echo "build_date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" >> $GITHUB_OUTPUT
                   echo "tag_date=$(date -u +%Y%m%d)" >> $GITHUB_OUTPUT
+
+            # Generate tags and suffix it by .1, .2, etc if the same
+            - name: Generate Tags
+              id: generate_tags
+              shell: bash
+              run: |
+                  base_tag=${{ steps.date.outputs.tag_date }}
+                  fedora_version=${{ env.FEDORA_VERSION }}
+
+                  tags=$(gh api repos/${{ github.repository }}/releases --jq '[.[].tag_name | select(startswith("'"${base_tag}"'"))] | sort_by(.)')
+
+                  if [ -z "$tags" ] || [ "$tags" == "[]" ]; then
+                      echo "version=${fedora_version}-${base_tag}" >> $GITHUB_OUTPUT
+                  else
+                      latest=$(echo "$tags" | jq -r '.[-1]')
+                      
+                      if [[ $latest == $base_tag ]]; then
+                          echo "version=${fedora_version}-${base_tag}.1" >> $GITHUB_OUTPUT
+                      else
+                          num=$(echo $latest | awk -F. '{print $2}')
+                          next=$((num + 1))
+                          echo "version=${fedora_version}-${base_tag}.${next}" >> $GITHUB_OUTPUT
+                      fi
+                  fi
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
 
             - name: Image Metadata
               uses: docker/metadata-action@v5
               id: metadata
               with:
                   # This generates all the tags for your image, you can add custom tags here too!
-                  # By default, it should generate "latest" and "latest.(date here)".
                   tags: |
                       type=raw,value=latest
-                      type=raw,value={{date 'YYYYMMDD'}}
+                      type=raw,value=${{ steps.generate_tags.outputs.version }}
                       type=sha,enable=${{ github.event_name == 'pull_request' }}
                       type=ref,event=pr
                   labels: |
-                      org.opencontainers.image.created=${{ steps.date.outputs.date }}
+                      org.opencontainers.image.created=${{ steps.date.outputs.build_date }}
                       org.opencontainers.image.description=${{ env.IMAGE_DESC }}
                       org.opencontainers.image.documentation=https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/refs/heads/main/README.md
                       org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}/blob/main/Containerfile
                       org.opencontainers.image.title=${{ env.IMAGE_NAME }}
                       org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
                       org.opencontainers.image.vendor=${{ github.repository_owner }}
-                      org.opencontainers.image.version=latest
+                      org.opencontainers.image.version=${{ steps.generate_tags.outputs.version }}
                       containers.bootc=1
                   sep-tags: ' '
                   sep-annotations: ' '
@@ -169,11 +195,11 @@ jobs:
         name: Generate Release
         needs: [build_push]
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        uses: ./.github/workflows/generate_release.yml
+        uses: ./.github/workflows/generate-release.yml
         secrets: inherit
         with:
-            release_date: ${{ needs.build_push.outputs.release_date }}
-            tag_date: ${{ needs.build_push.outputs.tag_date }}
+            build_date: ${{ needs.build_push.outputs.build_date }}
+            version: ${{ needs.build_push.outputs.version }}
 
         permissions:
             contents: write
