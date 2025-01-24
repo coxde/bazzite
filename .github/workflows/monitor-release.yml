@@ -1,0 +1,53 @@
+---
+name: Monitor Release
+on:
+    schedule:
+        - cron: '0 * * * *' # Hourly
+    workflow_dispatch:
+
+jobs:
+    check-release:
+        name: Monitor Release and Trigger Build
+        runs-on: ubuntu-24.04
+
+        permissions:
+            contents: write
+            actions: write
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Check Latest Release from Upstream
+              id: check_release
+              run: |
+                  LATEST_RELEASE=$(curl -s "https://api.github.com/repos/ublue-os/bazzite/releases/latest" | jq -r .tag_name)
+                  if [ -f latest_release ]; then
+                    PREVIOUS_RELEASE=$(cat latest_release)
+                  else
+                    PREVIOUS_RELEASE=""
+                  fi
+
+                  if [ "$LATEST_RELEASE" != "$PREVIOUS_RELEASE" ]; then
+                    echo "New release detected: $LATEST_RELEASE"
+                    echo "SHOULD_BUILD=true" >> $GITHUB_ENV
+                    echo $LATEST_RELEASE > latest_release
+                  else
+                    echo "No new release"
+                    echo "SHOULD_BUILD=false" >> $GITHUB_ENV
+                  fi
+
+            - name: Commit Updated latest_release File
+              if: env.SHOULD_BUILD == 'true'
+              run: |
+                  git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git add latest_release
+                  git commit -m "chore(ci): update latest release version from upstream"
+                  git push
+
+            - name: Trigger Build Image Workflow
+              if: env.SHOULD_BUILD == 'true'
+              uses: benc-uk/workflow-dispatch@v1
+              with:
+                  workflow: Build Image
+                  token: ${{ secrets.GITHUB_TOKEN }}
