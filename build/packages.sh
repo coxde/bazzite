@@ -18,5 +18,5 @@ https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/ho
 
 dnf5 install -y syncthingplasmoid-qt6
 
-### Remove packages
+# Remove packages
 dnf5 remove -y lutris
