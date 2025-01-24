@@ -25,10 +25,11 @@ tee /usr/libexec/flatpak-cake-wallet-install.sh <<EOF
 
 mkdir /tmp/cake_wallet
 cd /tmp/cake_wallet
-
 wget "$(curl -s https://api.github.com/repos/cake-tech/cake_wallet/releases/latest | grep -oP '"browser_download_url": "\K[^"]+' | grep 'Linux.flatpak')"
 
 flatpak install -y --bundle ./*.flatpak
+
+rm -rf /tmp/cake_wallet
 EOF
 
 # Make the script executable
