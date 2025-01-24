@@ -32,6 +32,9 @@ jobs:
             packages: write
             id-token: write
 
+        outputs:
+            release_date: ${{ steps.date.outputs.date }}
+
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -159,3 +162,12 @@ jobs:
                   TAGS: ${{ steps.push.outputs.digest }}
                   COSIGN_EXPERIMENTAL: false
                   COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+
+    generate_release:
+        name: Generate Release
+        needs: [build_push]
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: ./.github/workflows/generate_release.yml
+        secrets: inherit
+        with:
+            release_date: ${{ needs.build_push.outputs.release_date }}

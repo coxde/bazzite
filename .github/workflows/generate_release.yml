@@ -1,0 +1,32 @@
+name: Generate Release
+on:
+    workflow_call:
+    workflow_dispatch:
+        inputs:
+            release_date:
+                required: true
+                type: string
+permissions:
+    contents: write
+
+jobs:
+    generate-release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  name: ${{ inputs.release_date }}
+                  body: |
+                      ## Release Information
+                      - **Image Name**: `${{ github.event.repository.name }}`
+                      - **Build Date**: ${{ inputs.release_date }}
+                      - **Registry**: `ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}`
+
+                      ## Tags
+                      - `latest`
+                      - `${{ inputs.release_date }}`
+                  tag_name: ${{ inputs.release_date }}
+                  make_latest: true
+                  draft: false
+                  prerelease: false
