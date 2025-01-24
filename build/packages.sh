@@ -6,7 +6,7 @@ set -ouex pipefail
 OS_VERSION=$(rpm -E %fedora)
 
 # Install packages
-dnf5 install -y kcm-fcitx5 kgpg kmousetool kontact merkuro yakuake syncthing
+dnf5 install -y kcm-fcitx5 kgpg kmousetool kontact yakuake syncthing
 
 # Install COPR packages
 
