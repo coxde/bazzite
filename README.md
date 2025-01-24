@@ -1,5 +1,7 @@
 # Bazzite 🔮
 
+[![Build Image](https://github.com/coxde/bazzite/actions/workflows/build.yml/badge.svg)](https://github.com/coxde/bazzite/actions/workflows/build.yml) [![Build ISO](https://github.com/coxde/bazzite/actions/workflows/build-iso.yml/badge.svg)](https://github.com/coxde/bazzite/actions/workflows/build-iso.yml)
+
 ## Purpose 🤔
 
 This repository is for my personal OS image, very much based on my own needs. It's based on [Bazzite](https://bazzite.gg/) and a template published by the [Universal Blue](https://universal-blue.org/) Project.
