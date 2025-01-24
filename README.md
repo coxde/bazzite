@@ -4,6 +4,14 @@
 
 This repository is for my personal OS image, very much based on my own needs. It's based on [Bazzite](https://bazzite.gg/) and a template published by the [Universal Blue](https://universal-blue.org/) Project.
 
+## Features ✨
+
+-   Additional RPM and Flatpak packages
+-   JetBrainsMono Nerd Font
+-   Papirus icon theme and folder theme
+-   Justfiles: AppMan, Fish
+-   LibreWolf and KeePassXC workaround in Flatpak
+
 ## Installation ⚙️
 
 ### Rebase
