@@ -59,22 +59,21 @@ jobs:
               id: generate_tags
               shell: bash
               run: |
-                  base_tag=${{ steps.date.outputs.tag_date }}
-                  fedora_version=${{ env.FEDORA_VERSION }}
+                  version=${{ env.FEDORA_VERSION }}.${{ steps.date.outputs.tag_date }}
 
-                  tags=$(gh api repos/${{ github.repository }}/releases --jq '[.[].tag_name | select(startswith("'"${base_tag}"'"))] | sort_by(.)')
+                  tags=$(gh api repos/${{ github.repository }}/releases --jq '[.[].tag_name | select(startswith("'"${version}"'"))] | sort_by(.)')
 
                   if [ -z "$tags" ] || [ "$tags" == "[]" ]; then
-                      echo "version=${fedora_version}-${base_tag}" >> $GITHUB_OUTPUT
+                      echo "version=${version}" >> $GITHUB_OUTPUT
                   else
                       latest=$(echo "$tags" | jq -r '.[-1]')
                       
-                      if [[ $latest == $base_tag ]]; then
-                          echo "version=${fedora_version}-${base_tag}.1" >> $GITHUB_OUTPUT
+                      if [[ $latest == $version ]]; then
+                          echo "version=${version}.1" >> $GITHUB_OUTPUT
                       else
-                          num=$(echo $latest | awk -F. '{print $2}')
+                          num=$(echo $latest | awk -F. '{print $3}')
                           next=$((num + 1))
-                          echo "version=${fedora_version}-${base_tag}.${next}" >> $GITHUB_OUTPUT
+                          echo "version=${version}.${next}" >> $GITHUB_OUTPUT
                       fi
                   fi
               env:
