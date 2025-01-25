@@ -1,13 +1,6 @@
 name: Generate Release
 on:
     workflow_call:
-        inputs:
-            build_date:
-                required: true
-                type: string
-            version:
-                required: true
-                type: string
     workflow_dispatch:
 
 permissions:
@@ -17,20 +10,36 @@ jobs:
     generate-release:
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout last 500 commits (for <commits> to work)
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 500
+
+            - name: Get Target
+              id: get-target
+              run: |
+                  TARGET="${{ github.ref }}"
+                  TARGET="${TARGET##*/}"
+                  if [ "$TARGET" = "main" ]; then
+                    TARGET="stable"
+                  fi
+                  echo "target=$TARGET" >> $GITHUB_OUTPUT
+
+            - name: Generate Release Text
+              id: generate-release
+              run: |
+                  python3 ./.github/workflows/changelog.py \
+                    "${{ steps.get-target.outputs.target }}" \
+                    ./output.env ./changelog.md --workdir . }}"
+                  source ./output.env
+                  echo "title=${TITLE}" >> $GITHUB_OUTPUT
+                  echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
             - name: Create Release
               uses: softprops/action-gh-release@v2
               with:
-                  name: ${{ inputs.version }}
-                  body: |
-                      ## Release Information
-                      - **Image Name**: `${{ github.event.repository.name }}`
-                      - **Build Date**: `${{ inputs.build_date }}`
-                      - **Registry**: https://ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
-
-                      ## Tags
-                      - `latest`
-                      - `${{ inputs.version }}`
-                  tag_name: ${{ inputs.version }}
-                  make_latest: true
-                  draft: false
-                  prerelease: false
+                  name: ${{ steps.generate-release.outputs.title }}
+                  tag_name: ${{ steps.generate-release.outputs.tag }}
+                  body_path: ./changelog.md
+                  make_latest: ${{ steps.get-target.outputs.target == 'stable' }}
+                  prerelease: ${{ steps.get-target.outputs.target != 'stable' }}
