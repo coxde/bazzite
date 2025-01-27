@@ -6,17 +6,17 @@ set -ouex pipefail
 OS_VERSION=$(rpm -E %fedora)
 
 # Install packages
-dnf5 install -y kcm-fcitx5 kgpg kmousetool kontact ksystemlog yakuake syncthing
+dnf5 -y install kcm-fcitx5 kgpg kmousetool kontact ksystemlog yakuake syncthing
 
 # Install COPR packages
+dnf5 -y copr enable ublue-os/staging
 
+dnf5 -y install uupd
 
 # Install 3rd party packages
-curl -fLs --create-dirs \
-https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo \
--o /etc/yum.repos.d/download.opensuse.org.repositories.home:mkittler.Fedora_${OS_VERSION}.home:mkittler.repo
+dnf5 -y config-manager addrepo --from-repofile="https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo"
 
-dnf5 install -y syncthingplasmoid-qt6
+dnf5 -y install syncthingplasmoid-qt6
 
 # Remove packages
-dnf5 remove -y lutris
+dnf5 -y remove lutris
