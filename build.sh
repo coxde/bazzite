@@ -26,3 +26,7 @@ echo "::endgroup::"
 echo "::group:: ===== Replace Image Info ====="
 /ctx/build/image-info.sh
 echo "::endgroup::"
+
+echo "::group:: ===== Clean System ====="
+/ctx/build/clean.sh
+echo "::endgroup::"
