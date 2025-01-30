@@ -9,9 +9,9 @@ This repository is for my personal OS image, very much based on my own needs. It
 ## Features ✨
 
 -   Additional RPM and Flatpak packages
--   JetBrainsMono Nerd Font
--   Papirus icon theme and folder theme
--   Justfiles: AppMan, Fish
+-   JetBrainsMono Nerd Font; Papirus icon theme and folder theme
+-   Use uupd instead of ublue-update
+-   Justfiles: AppMan, Fish, Nix
 -   LibreWolf and KeePassXC workaround in Flatpak
 
 ## Installation ⚙️
