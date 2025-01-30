@@ -28,11 +28,9 @@ install-nix ACTION="":
       [ -f "${HOME}/.config/fish/conf.d/nix.fish" ] && rm -f "${HOME}/.config/fish/conf.d/nix.fish"
     elif [[ "${OPTION,,}" =~ ^configure ]]; then
       echo "Configuring fish shell integration..."
-      tee "${HOME}/.config/fish/conf.d/nix.fish" <<EOF
-      # Nix
-      if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
-          source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
-      end
-      # End Nix
-      EOF
+      echo "# Nix" > "${HOME}/.config/fish/conf.d/nix.fish"
+      echo "if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'" >> "${HOME}/.config/fish/conf.d/nix.fish"
+      echo "    source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'" >> "${HOME}/.config/fish/conf.d/nix.fish"
+      echo "end" >> "${HOME}/.config/fish/conf.d/nix.fish"
+      echo "# End Nix" >> "${HOME}/.config/fish/conf.d/nix.fish"
     fi
