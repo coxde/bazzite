@@ -6,7 +6,7 @@ set -ouex pipefail
 OS_VERSION=$(rpm -E %fedora)
 
 # Install packages
-dnf5 -y install kcm-fcitx5 kgpg kmousetool kontact ksystemlog yakuake syncthing
+dnf5 -y install kgpg kmousetool kontact ksystemlog yakuake syncthing
 
 # Install COPR packages
 dnf5 -y copr enable ublue-os/staging
