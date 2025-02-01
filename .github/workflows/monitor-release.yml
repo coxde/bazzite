@@ -20,20 +20,40 @@ jobs:
             - name: Check Latest Release from Upstream
               id: check_release
               run: |
-                  LATEST_RELEASE=$(curl -s "https://api.github.com/repos/ublue-os/bazzite/releases/latest" | jq -r .tag_name)
-                  if [ -f latest_release ]; then
-                    PREVIOUS_RELEASE=$(cat latest_release)
-                  else
-                    PREVIOUS_RELEASE=""
+                  # Retrieve API response and HTTP status code
+                  response=$(curl -s -w "\n%{http_code}" "https://api.github.com/repos/ublue-os/bazzite/releases/latest")
+                  http_code=$(echo "$response" | tail -n1)
+                  content=$(echo "$response" | sed -e '$d')
+
+                  # Check if HTTP request succeeded
+                  if [ "$http_code" -ne 200 ]; then
+                      echo "Error: GitHub API responded with HTTP $http_code"
+                      echo "SHOULD_BUILD=false" >> $GITHUB_ENV
+                      exit 0
                   fi
 
-                  if [ "$LATEST_RELEASE" != "$PREVIOUS_RELEASE" ]; then
-                    echo "New release detected: $LATEST_RELEASE"
-                    echo "SHOULD_BUILD=true" >> $GITHUB_ENV
-                    echo $LATEST_RELEASE > latest_release
+                  # Extract release tag and validate
+                  LATEST_RELEASE=$(echo "$content" | jq -r .tag_name)
+                  if [[ ! "$LATEST_RELEASE" =~ ^[0-9]+\.[0-9]{8}(\.[0-9]+)*$ ]]; then
+                      echo "Error: Invalid tag format: $LATEST_RELEASE"
+                      echo "SHOULD_BUILD=false" >> $GITHUB_ENV
+                      exit 0
+                  fi
+
+                  # Compare with previous release
+                  if [ -f latest_release ]; then
+                      PREVIOUS_RELEASE=$(cat latest_release)
                   else
-                    echo "No new release"
-                    echo "SHOULD_BUILD=false" >> $GITHUB_ENV
+                      PREVIOUS_RELEASE=""
+                  fi
+
+                  if [[ "$LATEST_RELEASE" != "$PREVIOUS_RELEASE" ]]; then
+                      echo "New release detected: $LATEST_RELEASE"
+                      echo "SHOULD_BUILD=true" >> $GITHUB_ENV
+                      echo "$LATEST_RELEASE" > latest_release
+                  else
+                      echo "No new release"
+                      echo "SHOULD_BUILD=false" >> $GITHUB_ENV
                   fi
 
             - name: Commit Updated latest_release File
