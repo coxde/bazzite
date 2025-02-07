@@ -6,7 +6,7 @@ set -ouex pipefail
 OS_VERSION=$(rpm -E %fedora)
 
 # Install packages
-dnf5 -y install kgpg kmousetool kontact ksystemlog yakuake syncthing
+dnf5 -y install kgpg kmousetool konsole kontact ksystemlog syncthing yakuake
 
 # Install COPR packages
 dnf5 -y copr enable ublue-os/staging
@@ -19,4 +19,4 @@ dnf5 -y config-manager addrepo --from-repofile="https://download.opensuse.org/re
 dnf5 -y install syncthingplasmoid-qt6
 
 # Remove packages
-dnf5 -y remove lutris
+dnf5 -y remove lutris ptyxis
