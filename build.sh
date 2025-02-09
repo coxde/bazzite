@@ -7,7 +7,6 @@ echo "::group:: ===== Manage Packages ====="
 echo "::endgroup::"
 
 echo "::group:: ===== Run Scripts ====="
-/ctx/build/flatpak-cake-wallet.sh
 /ctx/build/flatpak-librewolf-keepassxc.sh
 echo "::endgroup::"
 
