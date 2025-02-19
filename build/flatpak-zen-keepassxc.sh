@@ -1,4 +1,4 @@
-zen#!/bin/bash
+#!/bin/bash
 # Fix connection between Flatpak version Zen and KeePassXC
 # Credit: https://github.com/m2Giles/m2os/blob/main/flatpak.sh
 
