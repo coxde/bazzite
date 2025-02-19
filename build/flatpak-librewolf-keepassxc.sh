@@ -20,7 +20,7 @@ C %t/keepassxc-integration - - - - /usr/libexec/keepassxc-integration
 EOF
 
 # Create the systemd service for Flatpak overrides
-tee /usr/lib/systemd/system/flatpak-keepassxc-overrides.service <<EOF
+tee /usr/lib/systemd/system/flatpak-librewolf-keepassxc-overrides.service <<EOF
 [Unit]
 Description=Set Overrides for Flatpaks (LibreWolf and KeePassXC)
 ConditionPathExists=!/etc/.%N.stamp
@@ -28,7 +28,7 @@ After=local-fs.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/libexec/flatpak-keepassxc-overrides.sh
+ExecStart=/usr/libexec/flatpak-librewolf-keepassxc-overrides.sh
 ExecStop=/usr/bin/touch /etc/.%N.stamp
 
 [Install]
@@ -36,7 +36,7 @@ WantedBy=default.target multi-user.target
 EOF
 
 # Create the Flatpak overrides script
-tee /usr/libexec/flatpak-keepassxc-overrides.sh <<EOF
+tee /usr/libexec/flatpak-librewolf-keepassxc-overrides.sh <<EOF
 #!/usr/bin/bash
 
 # LibreWolf
@@ -55,10 +55,10 @@ flatpak override \
 EOF
 
 # Make the script executable
-chmod +x /usr/libexec/flatpak-keepassxc-overrides.sh
+chmod +x /usr/libexec/flatpak-librewolf-keepassxc-overrides.sh
 
 # Enable the systemd service
-systemctl enable flatpak-keepassxc-overrides.service
+systemctl enable flatpak-librewolf-keepassxc-overrides.service
 
 # Create the KeePassXC integration directory
 mkdir /usr/libexec/keepassxc-integration
