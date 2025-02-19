@@ -8,6 +8,7 @@ echo "::endgroup::"
 
 echo "::group:: ===== Run Scripts ====="
 /ctx/build/flatpak-librewolf-keepassxc.sh
+/ctx/build/flatpak-zen-keepassxc.sh
 echo "::endgroup::"
 
 echo "::group:: ===== Install Fonts ====="
