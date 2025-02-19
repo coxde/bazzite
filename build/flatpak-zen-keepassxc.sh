@@ -61,7 +61,7 @@ chmod +x /usr/libexec/flatpak-zen-keepassxc-overrides.sh
 systemctl enable flatpak-zen-keepassxc-overrides.service
 
 # Create the KeePassXC integration directory
-mkdir /usr/libexec/keepassxc-integration
+mkdir -p /usr/libexec/keepassxc-integration
 
 # Create the KeePassXC proxy wrapper script
 tee /usr/libexec/keepassxc-integration/keepassxc-proxy-wrapper <<'EOF'
