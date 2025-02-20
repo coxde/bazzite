@@ -49,7 +49,7 @@ flatpak override \
     --filesystem=xdg-data/flatpak/app/org.keepassxc.KeePassXC:ro \
     --filesystem=xdg-data/flatpak/runtime/org.kde.Platform:ro \
     --filesystem=xdg-run/app/org.keepassxc.KeePassXC:create \
-    --filesystems=~/.mozilla:ro \
+    --filesystem=~/.mozilla:ro \
     --env=MOZ_ENABLE_WAYLAND=1 \
     --env=MOZ_USE_XINPUT2=1 \
     app.zen_browser.zen
@@ -57,7 +57,7 @@ flatpak override \
 # KeePassXC
 flatpak override \
     --system \
-    --filesystem=!~/.mozilla \
+    --nofilesystem=~/.mozilla \
     org.keepassxc.KeePassXC
 EOF
 
