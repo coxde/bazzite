@@ -12,7 +12,7 @@ systemctl enable --global p11-kit-server.service
 mkdir -p /usr/share/user-tmpfiles.d
 
 tee /usr/share/user-tmpfiles.d/keepassxc-integration.conf <<EOF
-C %h/.var/app/app.zen_browser.zen/.zen/native-messaging-hosts/org.keepassxc.keepassxc_browser.json - - - - /run/keepassxc-integration/zen-keepassxc.json
+C %h/.mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json - - - - /run/keepassxc-integration/zen-keepassxc.json
 EOF
 
 tee /usr/lib/tmpfiles.d/keepassxc-integration.conf <<EOF
@@ -49,9 +49,16 @@ flatpak override \
     --filesystem=xdg-data/flatpak/app/org.keepassxc.KeePassXC:ro \
     --filesystem=xdg-data/flatpak/runtime/org.kde.Platform:ro \
     --filesystem=xdg-run/app/org.keepassxc.KeePassXC:create \
+    --filesystems=~/.mozilla:ro \
     --env=MOZ_ENABLE_WAYLAND=1 \
     --env=MOZ_USE_XINPUT2=1 \
     app.zen_browser.zen
+
+# KeePassXC
+flatpak override \
+    --system \
+    --filesystem=!~/.mozilla \
+    org.keepassxc.KeePassXC
 EOF
 
 # Make the script executable
