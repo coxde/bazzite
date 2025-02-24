@@ -15,7 +15,7 @@ dnf5 -y install \
     yakuake
 
 # Install COPR packages
-dnf5 -y copr enable ublue-os/staging
+dnf5 -y copr enable ublue-os/packages
 
 dnf5 -y install \
     uupd
