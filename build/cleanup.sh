@@ -18,10 +18,6 @@ EOF
 systemctl disable ublue-update.timer
 systemctl enable uupd.timer
 
-# Enable for now because uupd can't upgrade brew due to selinux issue
-systemctl enable brew-update.timer
-systemctl enable brew-upgrade.timer
-
 # Clean temp files
 # Enable extended globbing
 shopt -s extglob
