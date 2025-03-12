@@ -9,6 +9,9 @@ FROM ghcr.io/ublue-os/bazzite:stable AS base
 ARG IMAGE_NAME="${IMAGE_NAME:-bazzite}"
 ARG IMAGE_VENDOR="${IMAGE_VENDOR:-coxde}"
 
+# Copy system files
+COPY system /
+
 # Build
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/build.sh && \
