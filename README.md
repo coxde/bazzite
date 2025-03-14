@@ -1,6 +1,6 @@
 # Bazzite 🔮
 
-[![Build Image](https://github.com/coxde/bazzite/actions/workflows/build.yml/badge.svg)](https://github.com/coxde/bazzite/actions/workflows/build.yml) [![Build ISO](https://github.com/coxde/bazzite/actions/workflows/build-iso.yml/badge.svg)](https://github.com/coxde/bazzite/actions/workflows/build-iso.yml)
+[![Build Image](https://github.com/coxde/bazzite/actions/workflows/build.yml/badge.svg)](https://github.com/coxde/bazzite/actions/workflows/build.yml)
 
 ## Purpose 🤔
 
@@ -42,7 +42,7 @@ The `latest` tag will automatically point to the latest build.
 
 ### ISO
 
-ISOs will be manually published to [GitHub Artifacts](https://github.com/coxde/bazzite/actions/workflows/build-iso.yml). May move to other storage (one day™).
+TODO: https://github.com/ublue-os/image-template/commit/eb0cc45977b7dc47656c117a9ed34cfd66857912
 
 ## Verification ✅
 
