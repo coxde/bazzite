@@ -11,6 +11,7 @@ dnf5 -y install \
     kmousetool \
     konsole \
     kontact \
+    python3-ramalama \
     syncthing \
     yakuake
 
