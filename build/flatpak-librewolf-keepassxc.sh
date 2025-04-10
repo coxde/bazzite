@@ -42,6 +42,7 @@ tee /usr/libexec/flatpak-librewolf-keepassxc-overrides.sh <<EOF
 # LibreWolf
 flatpak override \
     --system \
+    --device=all \
     --filesystem=xdg-run/p11-kit/pkcs11 \
     --filesystem=/run/keepassxc-integration \
     --filesystem=/var/lib/flatpak/app/org.keepassxc.KeePassXC:ro \
