@@ -13,7 +13,6 @@ This repository is for my personal OS image, very much based on my own needs. It
 -   Use uupd instead of ublue-update
 -   Justfiles: AppMan, Fish, Nix
 -   LibreWolf and KeePassXC workaround in Flatpak
--   Standalone SteamOS (Gamescope) session from login screen
 
 ## Installation ⚙️
 
@@ -61,4 +60,3 @@ cosign verify --key cosign.pub ghcr.io/coxde/bazzite
 -   [Bluefin](https://projectbluefin.io/)
 -   [main](https://github.com/ubazzite/main/)
 -   [m2os](https://github.com/m2giles/m2os)
--   [Amy OS](https://github.com/astrovm/amyos)
