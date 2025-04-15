@@ -1,5 +1,6 @@
 #!/bin/bash
 # Fix connection between Flatpak version LibreWolf and KeePassXC
+# Add some permissions to access webcam, mic, etc.
 # Credit: https://github.com/m2Giles/m2os/blob/main/flatpak.sh
 
 set -ouex pipefail
@@ -20,15 +21,15 @@ C %t/keepassxc-integration - - - - /usr/libexec/keepassxc-integration
 EOF
 
 # Create the systemd service for Flatpak overrides
-tee /usr/lib/systemd/system/flatpak-librewolf-keepassxc-overrides.service <<EOF
+tee /usr/lib/systemd/system/flatpak-librewolf-overrides.service <<EOF
 [Unit]
-Description=Set Overrides for Flatpaks (LibreWolf and KeePassXC)
+Description=Set Overrides for LibreWolf Flatpaks
 ConditionPathExists=!/etc/.%N.stamp
 After=local-fs.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/libexec/flatpak-librewolf-keepassxc-overrides.sh
+ExecStart=/usr/libexec/flatpak-librewolf-overrides.sh
 ExecStop=/usr/bin/touch /etc/.%N.stamp
 
 [Install]
@@ -36,13 +37,14 @@ WantedBy=default.target multi-user.target
 EOF
 
 # Create the Flatpak overrides script
-tee /usr/libexec/flatpak-librewolf-keepassxc-overrides.sh <<EOF
+tee /usr/libexec/flatpak-librewolf-overrides.sh <<EOF
 #!/usr/bin/bash
 
 # LibreWolf
 flatpak override \
     --system \
     --device=all \
+    --allow=bluetooth \
     --filesystem=xdg-run/p11-kit/pkcs11 \
     --filesystem=/run/keepassxc-integration \
     --filesystem=/var/lib/flatpak/app/org.keepassxc.KeePassXC:ro \
@@ -56,10 +58,10 @@ flatpak override \
 EOF
 
 # Make the script executable
-chmod +x /usr/libexec/flatpak-librewolf-keepassxc-overrides.sh
+chmod +x /usr/libexec/flatpak-librewolf-overrides.sh
 
 # Enable the systemd service
-systemctl enable flatpak-librewolf-keepassxc-overrides.service
+systemctl enable flatpak-librewolf-overrides.service
 
 # Create the KeePassXC integration directory
 mkdir -p /usr/libexec/keepassxc-integration
