@@ -4,8 +4,8 @@ set -ouex pipefail
 
 # Set variables
 IMPORT_FILE="/usr/share/ublue-os/just/60-custom.just"
-JUST_FILES_FOLDER="/ctx/justfiles"
-DEST_FOLDER="/usr/share/ublue-os/just/custom/justfiles"
+JUST_FILES_FOLDER="/ctx/just"
+DEST_FOLDER="/usr/share/ublue-os/just/custom"
 
 # Find all justfiles
 JUSTFILES=($(find "${JUST_FILES_FOLDER}" -type f -name "*.just" | sed "s|${JUST_FILES_FOLDER}/||g"))
