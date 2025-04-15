@@ -14,10 +14,6 @@ tee /etc/NetworkManager/conf.d/20-connectivity.conf <<EOF
 enabled=false
 EOF
 
-# Replace ublue-update with uupd
-systemctl disable ublue-update.timer
-systemctl enable uupd.timer
-
 # Clean temp files
 # Enable extended globbing
 shopt -s extglob

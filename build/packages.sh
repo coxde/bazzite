@@ -16,10 +16,6 @@ dnf5 -y install \
     yakuake
 
 # Install COPR packages
-dnf5 -y copr enable ublue-os/packages
-
-dnf5 -y install \
-    uupd
 
 # Install 3rd party packages
 dnf5 -y config-manager addrepo --from-repofile="https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo"
