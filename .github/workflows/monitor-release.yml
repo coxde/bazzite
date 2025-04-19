@@ -15,7 +15,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
             - name: Check Latest Release from Upstream
               id: check_release
@@ -67,7 +67,7 @@ jobs:
 
             - name: Trigger Build Image Workflow
               if: env.SHOULD_BUILD == 'true'
-              uses: benc-uk/workflow-dispatch@v1
+              uses: benc-uk/workflow-dispatch@e2e5e9a103e331dad343f381a29e654aea3cf8fc # v1
               with:
                   workflow: Build Image
                   token: ${{ secrets.GITHUB_TOKEN }}
