@@ -1,4 +1,14 @@
 {
     $schema: 'https://docs.renovatebot.com/renovate-schema.json',
     extends: ['config:best-practices'],
+
+    rebaseWhen: 'never',
+
+    packageRules: [
+        {
+            enabled: false,
+            matchUpdateTypes: ['digest', 'pinDigest', 'pin'],
+            matchDepNames: ['ghcr.io/ublue-os/bazzite'],
+        },
+    ],
 }
