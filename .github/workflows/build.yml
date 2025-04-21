@@ -11,7 +11,6 @@ env:
     IMAGE_DESC: 'My Customized Bazzite Image'
     IMAGE_VENDOR: ${{ github.repository_owner }}
     IMAGE_REGISTRY: 'ghcr.io/${{ github.repository_owner }}'
-    FEDORA_VERSION: '42'
     DEFAULT_TAG: 'latest'
 
 concurrency:
@@ -42,6 +41,25 @@ jobs:
               with:
                   remove-codeql: true
 
+            - name: Fetch Upstream Versions
+              id: fetch
+              run: |
+                  skopeo inspect docker://ghcr.io/ublue-os/bazzite:stable > inspect.json
+
+                  image=$(jq -r '.["Labels"]["org.opencontainers.image.version"]' inspect.json)
+                  if [ -z "$image" ] || [ "null" = "$image" ]; then
+                      echo "Inspected image version must not be empty or null"
+                      exit 1
+                  fi
+
+                  fedora=$(echo "$image" | cut -f1 -d.)
+                  if [ -z "$fedora" ] || [ "null" = "$fedora" ]; then
+                      echo "Fedora version must not be empty or null"
+                      exit 1
+                  fi
+
+                  echo "fedora_version=$fedora" >> $GITHUB_OUTPUT
+
             - name: Get Current Date
               id: date
               run: |
@@ -53,7 +71,7 @@ jobs:
               id: generate_tags
               shell: bash
               run: |
-                  version=${{ env.FEDORA_VERSION }}.${{ steps.date.outputs.tag_date }}
+                  version=${{ steps.fetch.outputs.fedora_version }}.${{ steps.date.outputs.tag_date }}
 
                   tags=$(gh api repos/${{ github.repository }}/releases --jq '[.[].tag_name | select(startswith("'"${version}"'"))] | sort_by(.)')
 
