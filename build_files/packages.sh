@@ -18,9 +18,7 @@ dnf5 -y install \
 # Install COPR packages
 
 # Install 3rd party packages
-# dnf5 -y config-manager addrepo --from-repofile="https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo"
-# Use 41 for now until 42 enabled
-dnf5 -y config-manager addrepo --from-repofile="https://download.opensuse.org/repositories/home:mkittler/Fedora_41/home:mkittler.repo"
+dnf5 -y config-manager addrepo --from-repofile="https://download.opensuse.org/repositories/home:mkittler/Fedora_${OS_VERSION}/home:mkittler.repo"
 
 dnf5 -y install \
     syncthingplasmoid-qt6
