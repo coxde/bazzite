@@ -130,6 +130,7 @@ jobs:
             - name: Run Rechunker
               id: rechunk
               uses: hhd-dev/rechunk@c945e9ec8ad4466f888e41ab7f4d5ba2f74a8ee4 # v1.2.1
+              if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
               with:
                   rechunk: 'ghcr.io/hhd-dev/rechunk:v1.1.2'
                   ref: 'raw-img'
@@ -140,6 +141,7 @@ jobs:
 
             # This is necessary so that the podman socket can find the rechunked image on its storage
             - name: Load in Podman and Tag
+              if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
               run: |
                   IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
                   sudo rm -rf ${{ steps.rechunk.outputs.output }}
@@ -162,12 +164,14 @@ jobs:
             - name: Lowercase Registry
               id: registry_case
               uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
+              if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
               with:
                   string: ${{ env.IMAGE_REGISTRY }}
 
             - name: Lowercase Image
               id: image_case
               uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
+              if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
               with:
                   string: ${{ env.IMAGE_NAME }}
 
