@@ -6,8 +6,9 @@
 
     packageRules: [
         {
-            enabled: false,
-            matchUpdateTypes: ['digest', 'pinDigest', 'pin'],
+            automerge: true,
+            matchUpdateTypes: ['digest'],
+            matchFileNames: ['image-versions.yaml'],
             matchDepNames: ['ghcr.io/ublue-os/bazzite'],
         },
     ],

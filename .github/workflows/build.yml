@@ -43,6 +43,7 @@ jobs:
 
             - name: Fetch Upstream Versions
               id: fetch
+              shell: bash
               run: |
                   skopeo inspect docker://ghcr.io/ublue-os/bazzite:stable > inspect.json
 
@@ -62,6 +63,7 @@ jobs:
 
             - name: Get Current Date
               id: date
+              shell: bash
               run: |
                   echo "build_date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" >> $GITHUB_OUTPUT
                   echo "tag_date=$(date -u +%Y%m%d)" >> $GITHUB_OUTPUT
@@ -91,6 +93,20 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ github.token }}
 
+            - name: Query Image Digest
+              id: query_digest
+              env:
+                  IMAGE_VERSIONS_FILE: ./image-versions.yaml
+              shell: bash
+              run: |
+                  BASE_IMAGE_DIGEST=$(yq -r ".images[] | select(.name == \"${{ env.IMAGE_NAME }}\") | .digest" "$IMAGE_VERSIONS_FILE")
+                  if [ -z "$BASE_IMAGE_DIGEST" ]; then
+                      echo "BASE_IMAGE_DIGEST not found in image-versions.yaml"
+                      exit 1
+                  fi
+
+                  echo "BASE_IMAGE_DIGEST=${BASE_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
+
             - name: Image Metadata
               uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
               id: metadata
@@ -114,11 +130,23 @@ jobs:
                   sep-tags: ' '
                   sep-annotations: ' '
 
+            # Generate a file with all the build-args passed to buildah
+            - name: Prepare build args file
+              shell: bash
+              run: |
+                  cat <<'EOF' >>build_args.txt
+                  IMAGE_NAME=${{ env.IMAGE_NAME }}
+                  IMAGE_VENDOR=${{ env.IMAGE_VENDOR }}
+                  BASE_IMAGE_DIGEST=${{ steps.query_digest.outputs.BASE_IMAGE_DIGEST }}
+                  EOF
+
+            # Build image using buildah and save it to raw-img for rechunk
             - name: Build Image
               id: build_image
               shell: bash
               run: |
                   sudo buildah build \
+                      --build-arg-file build_args.txt \
                       --file "./Containerfile" \
                       --format "docker" \
                       --tag raw-img .
@@ -142,6 +170,7 @@ jobs:
             # This is necessary so that the podman socket can find the rechunked image on its storage
             - name: Load in Podman and Tag
               if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+              shell: bash
               run: |
                   IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
                   sudo rm -rf ${{ steps.rechunk.outputs.output }}
@@ -199,6 +228,7 @@ jobs:
 
             - name: Sign Container Image
               if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+              shell: bash
               run: |
                   IMAGE_FULL="${{ steps.registry_case.outputs.lowercase }}/${{ steps.image_case.outputs.lowercase }}"
                   for tag in ${{ steps.metadata.outputs.tags }}; do
