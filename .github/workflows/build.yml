@@ -130,6 +130,8 @@ jobs:
             - name: Build Image
               id: build_image
               env:
+                  IMAGE_NAME: ${{ env.IMAGE_NAME }}
+                  IMAGE_VENDOR: ${{ env.IMAGE_VENDOR }}
                   BASE_IMAGE_DIGEST: ${{ steps.query_digest.outputs.BASE_IMAGE_DIGEST }}
               shell: bash
               run: |
