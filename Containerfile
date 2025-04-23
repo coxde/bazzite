@@ -8,7 +8,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base image
-FROM ghcr.io/ublue-os/bazzite:stable@${BASE_IMAGE_DIGEST} AS base
+FROM ghcr.io/ublue-os/bazzite:stable${BASE_IMAGE_DIGEST:+@${BASE_IMAGE_DIGEST}} AS base
 
 # Build
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
