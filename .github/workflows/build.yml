@@ -1,9 +1,13 @@
 name: Build Image
 on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'image-versions.yaml'
     pull_request:
         branches:
             - main
-    merge_group:
     workflow_dispatch:
 
 env:
