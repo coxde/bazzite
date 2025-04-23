@@ -5,6 +5,13 @@
     rebaseWhen: 'never',
 
     packageRules: [
+        // Automerge all pins
+        {
+            automerge: true,
+            matchUpdateTypes: ['pin', 'pinDigest'],
+        },
+
+        // Automerge upstream image digests
         {
             automerge: true,
             matchUpdateTypes: ['digest'],
