@@ -91,6 +91,19 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ github.token }}
 
+            - name: Query Image Digest
+              id: query_digest
+              env:
+                  IMAGE_VERSIONS_FILE: ./image-versions.yaml
+              run: |
+                  BASE_IMAGE_DIGEST=$(yq -r ".images[] | select(.name == bazzite) | .digest" "$IMAGE_VERSIONS_FILE")
+                  if [ -z "$BASE_IMAGE_DIGEST" ]; then
+                      echo "BASE_IMAGE_DIGEST not found in image-versions.yaml"
+                      exit 1
+                  fi
+
+                  echo "BASE_IMAGE_DIGEST=${BASE_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
+
             - name: Image Metadata
               uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
               id: metadata
@@ -116,6 +129,8 @@ jobs:
 
             - name: Build Image
               id: build_image
+              env:
+                  BASE_IMAGE_DIGEST: ${{ steps.query_digest.outputs.BASE_IMAGE_DIGEST }}
               shell: bash
               run: |
                   sudo buildah build \
