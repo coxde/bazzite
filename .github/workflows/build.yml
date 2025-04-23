@@ -99,7 +99,7 @@ jobs:
                   IMAGE_VERSIONS_FILE: ./image-versions.yaml
               shell: bash
               run: |
-                  BASE_IMAGE_DIGEST=$(yq -r ".images[] | select(.name == bazzite) | .digest" "$IMAGE_VERSIONS_FILE")
+                  BASE_IMAGE_DIGEST=$(yq -r ".images[] | select(.name == ${{ env.IMAGE_NAME }}) | .digest" "$IMAGE_VERSIONS_FILE")
                   if [ -z "$BASE_IMAGE_DIGEST" ]; then
                       echo "BASE_IMAGE_DIGEST not found in image-versions.yaml"
                       exit 1
