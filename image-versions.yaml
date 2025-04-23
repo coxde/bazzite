@@ -1,0 +1,5 @@
+images:
+    - name: bazzite
+      image: ghcr.io/ublue-os/bazzite
+      tag: stable
+      digest: sha256:453e03103d7a36bbc673eec203ef131b9fdaf50a29d3f90e908f94865d248606 # FIXME
