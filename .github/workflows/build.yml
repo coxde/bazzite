@@ -130,15 +130,23 @@ jobs:
                   sep-tags: ' '
                   sep-annotations: ' '
 
+            # Generate a file with all the build-args passed to buildah
+            - name: Prepare build args file
+              shell: bash
+              run: |
+                  cat <<'EOF' >>build_args.txt
+                  IMAGE_NAME=${{ env.IMAGE_NAME }}
+                  IMAGE_VENDOR=${{ env.IMAGE_VENDOR }}
+                  BASE_IMAGE_DIGEST=${{ steps.query_digest.outputs.BASE_IMAGE_DIGEST }}
+                  EOF
+
+            # Build image using buildah and save it to raw-img for rechunk
             - name: Build Image
               id: build_image
-              env:
-                  IMAGE_NAME: ${{ env.IMAGE_NAME }}
-                  IMAGE_VENDOR: ${{ env.IMAGE_VENDOR }}
-                  BASE_IMAGE_DIGEST: ${{ steps.query_digest.outputs.BASE_IMAGE_DIGEST }}
               shell: bash
               run: |
                   sudo buildah build \
+                      --build-arg-file build_args.txt \
                       --file "./Containerfile" \
                       --format "docker" \
                       --tag raw-img .

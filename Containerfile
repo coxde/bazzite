@@ -1,14 +1,18 @@
-# Environments
+# Global build variables
 ARG IMAGE_NAME="${IMAGE_NAME:-bazzite}"
 ARG IMAGE_VENDOR="${IMAGE_VENDOR:-coxde}"
 ARG BASE_IMAGE_DIGEST="${BASE_IMAGE_DIGEST}"
 
-# Build context
+# Stage 1: Build context
 FROM scratch AS ctx
 COPY build_files /
 
-# Base image
+# Stage 2: Base image
 FROM ghcr.io/ublue-os/bazzite:stable${BASE_IMAGE_DIGEST:+@${BASE_IMAGE_DIGEST}} AS base
+
+# Use variables in this stage
+ARG IMAGE_NAME
+ARG IMAGE_VENDOR
 
 # Build
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
