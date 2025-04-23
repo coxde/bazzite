@@ -43,6 +43,7 @@ jobs:
 
             - name: Fetch Upstream Versions
               id: fetch
+              shell: bash
               run: |
                   skopeo inspect docker://ghcr.io/ublue-os/bazzite:stable > inspect.json
 
@@ -62,6 +63,7 @@ jobs:
 
             - name: Get Current Date
               id: date
+              shell: bash
               run: |
                   echo "build_date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" >> $GITHUB_OUTPUT
                   echo "tag_date=$(date -u +%Y%m%d)" >> $GITHUB_OUTPUT
@@ -95,6 +97,7 @@ jobs:
               id: query_digest
               env:
                   IMAGE_VERSIONS_FILE: ./image-versions.yaml
+              shell: bash
               run: |
                   BASE_IMAGE_DIGEST=$(yq -r ".images[] | select(.name == bazzite) | .digest" "$IMAGE_VERSIONS_FILE")
                   if [ -z "$BASE_IMAGE_DIGEST" ]; then
@@ -159,6 +162,7 @@ jobs:
             # This is necessary so that the podman socket can find the rechunked image on its storage
             - name: Load in Podman and Tag
               if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+              shell: bash
               run: |
                   IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
                   sudo rm -rf ${{ steps.rechunk.outputs.output }}
@@ -216,6 +220,7 @@ jobs:
 
             - name: Sign Container Image
               if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+              shell: bash
               run: |
                   IMAGE_FULL="${{ steps.registry_case.outputs.lowercase }}/${{ steps.image_case.outputs.lowercase }}"
                   for tag in ${{ steps.metadata.outputs.tags }}; do
