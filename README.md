@@ -8,9 +8,9 @@ This repository is for my personal OS image, very much based on my own needs. It
 
 ## Features ✨
 
--   Additional packages
--   JetBrainsMono Nerd Font; Papirus icon and folder theme
--   Justfiles: AppMan, Fish, Nix
+-   Extra [packages](https://github.com/coxde/bazzite/blob/main/build_files/packages.sh)
+-   More [Justfiles](https://github.com/coxde/bazzite/tree/main/build_files/just)
+-   Fonts and icons
 -   LibreWolf tweaks
 
 ## Installation ⚙️
@@ -57,5 +57,4 @@ cosign verify --key cosign.pub ghcr.io/coxde/bazzite
 -   [Aurora](https://getaurora.dev/)
 -   [Bazzite](https://bazzite.gg/)
 -   [Bluefin](https://projectbluefin.io/)
--   [main](https://github.com/ubazzite/main/)
 -   [m2os](https://github.com/m2giles/m2os)
