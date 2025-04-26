@@ -1,4 +1,9 @@
 {
+    "chat.commandCenter.enabled": false,
     "editor.fontFamily": "'Cascadia Code', 'Droid Sans Mono', 'monospace', monospace, 'Symbols Nerd Font Mono'",
-    "update.mode": "none"
+    "telemetry.feedback.enabled": false,
+    "telemetry.telemetryLevel": "off",
+    "update.mode": "none",
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false
 }
