@@ -2,6 +2,11 @@
 
 set -ouex pipefail
 
+# Enable services
+systemctl enable podman.socket
+systemctl enable ublue-system-setup.service
+systemctl --global enable ublue-user-setup.service
+
 # Disable Fedora telemetry
 # https://docs.projectbluefin.io/analytics/#fedora
 systemctl mask rpm-ostree-countme.timer
