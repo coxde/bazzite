@@ -135,7 +135,7 @@ jobs:
                   sep-annotations: ' '
 
             # Generate a file with all the build-args passed to buildah
-            - name: Prepare build args file
+            - name: Prepare Build Args File
               shell: bash
               run: |
                   cat <<'EOF' >>build_args.txt
