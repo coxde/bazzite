@@ -14,6 +14,9 @@ FROM ghcr.io/ublue-os/bazzite:stable${BASE_IMAGE_DIGEST:+@${BASE_IMAGE_DIGEST}} 
 ARG IMAGE_NAME
 ARG IMAGE_VENDOR
 
+# Copy system files
+COPY system_files /
+
 # Build
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
