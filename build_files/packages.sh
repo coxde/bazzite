@@ -13,6 +13,7 @@ dnf5 -y install \
     konsole \
     kontact \
     pipx \
+    podlet \
     podman-tui \
     python3-ramalama \
     rclone \
