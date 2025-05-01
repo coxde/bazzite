@@ -2,13 +2,11 @@
     $schema: 'https://docs.renovatebot.com/renovate-schema.json',
     extends: ['config:best-practices'],
 
-    rebaseWhen: 'never',
-
     customManagers: [
         // Match image-versions.yaml
         {
             customType: 'regex',
-            fileMatch: ['^image-versions\\.yaml$'],
+            fileMatch: ['image-versions(\\.[^.]+)?\\.(yaml|yml)$'],
             matchStrings: [
                 'image:\\s*(?<packageName>\\S+)\\s*tag:\\s*(?<currentValue>\\S+)\\s*digest:\\s*(?<currentDigest>sha256:[a-f0-9]+)',
             ],
@@ -19,16 +17,15 @@
     packageRules: [
         // Automerge all pins
         {
-            automerge: true,
             matchUpdateTypes: ['pin', 'pinDigest'],
+            automerge: true,
         },
 
         // Automerge upstream image digests
         {
-            automerge: true,
+            matchPackageNames: ['ghcr.io/ublue-os/bazzite'],
             matchUpdateTypes: ['digest'],
-            matchFileNames: ['image-versions.yaml'],
-            matchDepNames: ['ghcr.io/ublue-os/bazzite'],
+            automerge: true,
         },
     ],
 }
